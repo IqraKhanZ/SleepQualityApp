@@ -1,0 +1,32 @@
+[
+  {
+    "Gender":0,
+    "Physical Activity Level":-1,
+    "Average Sleep Quality":4.728
+  },
+  {
+    "Gender":0,
+    "Physical Activity Level":0,
+    "Average Sleep Quality":6.45
+  },
+  {
+    "Gender":0,
+    "Physical Activity Level":1,
+    "Average Sleep Quality":8.6
+  },
+  {
+    "Gender":1,
+    "Physical Activity Level":-1,
+    "Average Sleep Quality":3.6
+  },
+  {
+    "Gender":1,
+    "Physical Activity Level":0,
+    "Average Sleep Quality":6.6571428571
+  },
+  {
+    "Gender":1,
+    "Physical Activity Level":1,
+    "Average Sleep Quality":6.36
+  }
+]

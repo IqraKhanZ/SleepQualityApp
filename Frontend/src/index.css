@@ -1,0 +1,39 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  @apply min-h-screen bg-slate-50 text-night-900 transition-colors duration-500 ease-in-out antialiased;
+}
+
+.dark body {
+  @apply bg-night-gradient text-slate-100;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(148, 163, 255, 0.05);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(99, 102, 241, 0.4);
+  border-radius: 9999px;
+}
+
+select.tinted-select {
+  color: inherit;
+}
+
+select.tinted-select option {
+  background-color: #1b1c58;
+  color: #f5f3ff;
+}
+
+select.tinted-select option:checked,
+select.tinted-select option:hover {
+  background-color: #6d28d9;
+  color: #ffffff;
+}

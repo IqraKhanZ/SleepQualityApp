@@ -1,0 +1,114 @@
+[
+  {
+    "Step Range":{
+      "closed":"right",
+      "closed_left":false,
+      "closed_right":true,
+      "is_empty":false,
+      "left":2018.0,
+      "length":1412.286,
+      "mid":2724.143,
+      "open_left":true,
+      "open_right":false,
+      "right":3430.286
+    },
+    "Average Sleep Quality":4.4705882353,
+    "Step_Mid":2724.143
+  },
+  {
+    "Step Range":{
+      "closed":"right",
+      "closed_left":false,
+      "closed_right":true,
+      "is_empty":false,
+      "left":3430.286,
+      "length":1412.285,
+      "mid":4136.4285,
+      "open_left":true,
+      "open_right":false,
+      "right":4842.571
+    },
+    "Average Sleep Quality":4.9893617021,
+    "Step_Mid":4136.4285
+  },
+  {
+    "Step Range":{
+      "closed":"right",
+      "closed_left":false,
+      "closed_right":true,
+      "is_empty":false,
+      "left":4842.571,
+      "length":1412.286,
+      "mid":5548.714,
+      "open_left":true,
+      "open_right":false,
+      "right":6254.857
+    },
+    "Average Sleep Quality":6.4324324324,
+    "Step_Mid":5548.714
+  },
+  {
+    "Step Range":{
+      "closed":"right",
+      "closed_left":false,
+      "closed_right":true,
+      "is_empty":false,
+      "left":6254.857,
+      "length":1412.286,
+      "mid":6961.0,
+      "open_left":true,
+      "open_right":false,
+      "right":7667.143
+    },
+    "Average Sleep Quality":6.7209302326,
+    "Step_Mid":6961.0
+  },
+  {
+    "Step Range":{
+      "closed":"right",
+      "closed_left":false,
+      "closed_right":true,
+      "is_empty":false,
+      "left":7667.143,
+      "length":1412.286,
+      "mid":8373.286,
+      "open_left":true,
+      "open_right":false,
+      "right":9079.429
+    },
+    "Average Sleep Quality":6.3620689655,
+    "Step_Mid":8373.286
+  },
+  {
+    "Step Range":{
+      "closed":"right",
+      "closed_left":false,
+      "closed_right":true,
+      "is_empty":false,
+      "left":9079.429,
+      "length":1412.285,
+      "mid":9785.5715,
+      "open_left":true,
+      "open_right":false,
+      "right":10491.714
+    },
+    "Average Sleep Quality":6.6571428571,
+    "Step_Mid":9785.5715
+  },
+  {
+    "Step Range":{
+      "closed":"right",
+      "closed_left":false,
+      "closed_right":true,
+      "is_empty":false,
+      "left":10491.714,
+      "length":1412.286,
+      "mid":11197.857,
+      "open_left":true,
+      "open_right":false,
+      "right":11904.0
+    },
+    "Average Sleep Quality":6.4375,
+    "Step_Mid":11197.857
+  }
+]

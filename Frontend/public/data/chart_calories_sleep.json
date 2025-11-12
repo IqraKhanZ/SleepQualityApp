@@ -1,0 +1,114 @@
+[
+  {
+    "Calories Range":{
+      "closed":"right",
+      "closed_left":false,
+      "closed_right":true,
+      "is_empty":false,
+      "left":1541.0,
+      "length":264.714,
+      "mid":1673.357,
+      "open_left":true,
+      "open_right":false,
+      "right":1805.714
+    },
+    "Average Sleep Quality":4.85,
+    "Cal_Mid":1673.357
+  },
+  {
+    "Calories Range":{
+      "closed":"right",
+      "closed_left":false,
+      "closed_right":true,
+      "is_empty":false,
+      "left":1805.714,
+      "length":264.715,
+      "mid":1938.0715,
+      "open_left":true,
+      "open_right":false,
+      "right":2070.429
+    },
+    "Average Sleep Quality":5.4852941176,
+    "Cal_Mid":1938.0715
+  },
+  {
+    "Calories Range":{
+      "closed":"right",
+      "closed_left":false,
+      "closed_right":true,
+      "is_empty":false,
+      "left":2070.429,
+      "length":264.714,
+      "mid":2202.786,
+      "open_left":true,
+      "open_right":false,
+      "right":2335.143
+    },
+    "Average Sleep Quality":5.4646464646,
+    "Cal_Mid":2202.786
+  },
+  {
+    "Calories Range":{
+      "closed":"right",
+      "closed_left":false,
+      "closed_right":true,
+      "is_empty":false,
+      "left":2335.143,
+      "length":264.714,
+      "mid":2467.5,
+      "open_left":true,
+      "open_right":false,
+      "right":2599.857
+    },
+    "Average Sleep Quality":6.1900826446,
+    "Cal_Mid":2467.5
+  },
+  {
+    "Calories Range":{
+      "closed":"right",
+      "closed_left":false,
+      "closed_right":true,
+      "is_empty":false,
+      "left":2599.857,
+      "length":264.714,
+      "mid":2732.214,
+      "open_left":true,
+      "open_right":false,
+      "right":2864.571
+    },
+    "Average Sleep Quality":6.7386363636,
+    "Cal_Mid":2732.214
+  },
+  {
+    "Calories Range":{
+      "closed":"right",
+      "closed_left":false,
+      "closed_right":true,
+      "is_empty":false,
+      "left":2864.571,
+      "length":264.715,
+      "mid":2996.9285,
+      "open_left":true,
+      "open_right":false,
+      "right":3129.286
+    },
+    "Average Sleep Quality":6.5901639344,
+    "Cal_Mid":2996.9285
+  },
+  {
+    "Calories Range":{
+      "closed":"right",
+      "closed_left":false,
+      "closed_right":true,
+      "is_empty":false,
+      "left":3129.286,
+      "length":264.714,
+      "mid":3261.643,
+      "open_left":true,
+      "open_right":false,
+      "right":3394.0
+    },
+    "Average Sleep Quality":6.8571428571,
+    "Cal_Mid":3261.643
+  }
+]

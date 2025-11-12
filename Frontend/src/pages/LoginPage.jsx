@@ -1,0 +1,81 @@
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
+import { useAuth } from "../context/AuthContext.jsx";
+
+export default function LoginPage() {
+  const { login, isLoading, error } = useAuth();
+  const [form, setForm] = useState({ email: "", password: "" });
+
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+    setForm((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    try {
+      await login(form);
+    } catch (err) {
+      // Error state is handled inside AuthContext, so we silently catch here.
+    }
+  };
+
+  return (
+    <div className="flex min-h-screen flex-col items-center justify-center bg-slate-50 px-4 text-night-900 transition-colors duration-500 dark:bg-night-gradient dark:text-white">
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
+        className="w-full max-w-md rounded-3xl border border-night-200/40 bg-white/80 p-10 text-center text-night-900 shadow-lg backdrop-blur-xl transition-colors dark:border-white/10 dark:bg-white/10 dark:text-white"
+      >
+        <h1 className="text-3xl font-semibold">Welcome back to SleepWise</h1>
+        <p className="mt-2 text-sm text-slate-600 dark:text-slate-300">Sign in to continue improving your nightly rest.</p>
+        <form onSubmit={handleSubmit} className="mt-8 space-y-5 text-left">
+          <label className="flex flex-col gap-2 text-sm text-night-700 dark:text-slate-200">
+            Email
+            <input
+              name="email"
+              type="email"
+              required
+              placeholder="you@example.com"
+              className="rounded-2xl border border-night-200/40 bg-white/80 px-4 py-3 text-night-900 placeholder:text-slate-500 focus:border-aurora focus:outline-none focus:ring focus:ring-aurora/30 dark:border-white/10 dark:bg-white/10 dark:text-white dark:placeholder:text-slate-400"
+              value={form.email}
+              onChange={handleChange}
+            />
+          </label>
+          <label className="flex flex-col gap-2 text-sm text-night-700 dark:text-slate-200">
+            Password
+            <input
+              name="password"
+              type="password"
+              required
+              placeholder="••••••••"
+              className="rounded-2xl border border-night-200/40 bg-white/80 px-4 py-3 text-night-900 placeholder:text-slate-500 focus:border-aurora focus:outline-none focus:ring focus:ring-aurora/30 dark:border-white/10 dark:bg-white/10 dark:text-white dark:placeholder:text-slate-400"
+              value={form.password}
+              onChange={handleChange}
+            />
+          </label>
+          {error && (
+            <p className="rounded-2xl border border-red-400/40 bg-red-500/10 px-4 py-3 text-sm text-red-700 dark:text-red-200">
+              {error}
+            </p>
+          )}
+          <button
+            type="submit"
+            disabled={isLoading}
+            className="w-full rounded-full bg-aurora px-6 py-3 text-lg font-semibold text-night-900 shadow-aurora transition hover:scale-[1.01] disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            {isLoading ? "Signing in..." : "Login"}
+          </button>
+        </form>
+        <p className="mt-6 text-sm text-slate-600 dark:text-slate-300">
+          Need an account? {" "}
+          <Link to="/signup" className="text-aurora hover:text-night-900 dark:hover:text-white">
+            Create one
+          </Link>
+        </p>
+      </motion.div>
+    </div>
+  );
+}

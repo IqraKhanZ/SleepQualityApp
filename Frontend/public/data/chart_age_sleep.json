@@ -1,0 +1,26 @@
+[
+  {
+    "Age Group":"18-25",
+    "Average Sleep Quality":7.7948717949
+  },
+  {
+    "Age Group":"26-35",
+    "Average Sleep Quality":7.0058139535
+  },
+  {
+    "Age Group":"36-45",
+    "Average Sleep Quality":5.5057471264
+  },
+  {
+    "Age Group":"46-55",
+    "Average Sleep Quality":4.1647058824
+  },
+  {
+    "Age Group":"56-65",
+    "Average Sleep Quality":4.1176470588
+  },
+  {
+    "Age Group":"66-75",
+    "Average Sleep Quality":4.0
+  }
+]
