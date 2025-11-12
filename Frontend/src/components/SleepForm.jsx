@@ -62,7 +62,7 @@ export default function SleepForm({ onPrediction, scrollRef }) {
     setPrediction(null);
     try {
       console.log("\uD83E\uDDE0 Sending payload:", formattedPayload);
-      const response = await axios.post("http://localhost:5000/api/sleep/submit", formattedPayload, {
+      const response = await axios.post("https://sleepqualityapp-backend.onrender.com/api/sleep/submit", formattedPayload, {
         headers: {
           "Content-Type": "application/json",
           ...(token ? { Authorization: `Bearer ${token}` } : {})
