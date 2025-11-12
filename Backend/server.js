@@ -15,7 +15,7 @@ app.use(express.json());
 
 // ✅ Enable CORS for local React frontend (http://localhost:5173)
 app.use(cors({
-  origin: "http://localhost:5173",
+  origin: "https://sleepqualityapp.netlify.app",
   methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true,
 }));
