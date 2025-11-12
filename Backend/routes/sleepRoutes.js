@@ -69,7 +69,7 @@ router.post("/submit", async (req, res) => {
 
     // ✅ Send to Flask API
     const response = await axios.post(
-      "http://127.0.0.1:5001/predict",
+      "https://sleepqualityapp-backend-ml-flask.onrender.com/predict",
       mlInput
     );
 
