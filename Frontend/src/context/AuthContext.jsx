@@ -11,7 +11,7 @@ const AuthContext = createContext({
 });
 
 const AUTH_TOKEN_KEY = "sleepwise-auth-token";
-const BASE_URL = "http://localhost:5000";
+const BASE_URL = "https://sleepqualityapp-backend.onrender.com";
 
 function decodeToken(token) {
   if (!token) return null;
