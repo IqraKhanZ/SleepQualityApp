@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify
 import joblib
 import pandas as pd
 import numpy as np
+import os
 
 app = Flask(__name__)
 
@@ -22,34 +23,33 @@ def time_to_minutes(t):
         raise ValueError(f"Invalid time format: {t}")
 
 
-
 def encode_inputs(data):
     """Convert user-friendly inputs into numeric encodings (same as training)."""
-    # Gender: accept either string ("male"/"female") or int (0/1)
+    # Gender
     if isinstance(data["Gender"], str):
         gender = 0 if data["Gender"].lower() in ["m", "male"] else 1
     else:
         gender = int(data["Gender"])
 
-    # Physical Activity Level: accept int (-1,0,1) or string ("low","medium","high")
+    # Physical Activity Level
     if isinstance(data["Physical Activity Level"], str):
         activity = {"low": -1, "medium": 0, "high": 1}[data["Physical Activity Level"].lower()]
     else:
         activity = int(data["Physical Activity Level"])
 
-    # Dietary Habits: accept int (-1,0,1) or string ("unhealthy","medium","healthy")
+    # Dietary Habits
     if isinstance(data["Dietary Habits"], str):
         diet = {"unhealthy": -1, "medium": 0, "healthy": 1}[data["Dietary Habits"].lower()]
     else:
         diet = int(data["Dietary Habits"])
 
-    # Sleep Disorders: accept string ("yes"/"no") or int (0/1)
+    # Sleep Disorders
     if isinstance(data["Sleep Disorders"], str):
         sleep_dis = 1 if data["Sleep Disorders"].lower() == "yes" else 0
     else:
         sleep_dis = int(data["Sleep Disorders"])
 
-    # Medication Usage: accept string ("yes"/"no") or int (0/1)
+    # Medication Usage
     if isinstance(data["Medication Usage"], str):
         meds = 1 if data["Medication Usage"].lower() == "yes" else 0
     else:
@@ -113,5 +113,7 @@ def predict_sleep_quality():
         return jsonify({"error": str(e)}), 400
 
 
+# -------- Run App on Render --------
 if __name__ == "__main__":
-    app.run(port=5001, debug=True)
+    port = int(os.environ.get("PORT", 5001))  # Use Render-assigned port
+    app.run(host="0.0.0.0", port=port, debug=True)
