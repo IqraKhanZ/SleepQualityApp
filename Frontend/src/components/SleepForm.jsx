@@ -86,7 +86,10 @@ export default function SleepForm({ onPrediction, scrollRef }) {
         }
       }
     } catch (err) {
-      setError(err?.response?.data?.error || "Unable to fetch prediction. Please try again.");
+      console.error(err);
+      const fallbackMessage = "The server is currently warming up. Please wait a few minutes and try again.";
+      const serverMessage = err?.response?.data?.error || err?.message;
+      setError(serverMessage || fallbackMessage);
     } finally {
       setLoading(false);
     }
