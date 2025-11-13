@@ -82,7 +82,10 @@ export function AuthProvider({ children }) {
       setUser(incomingUser);
       navigate("/home");
     } catch (err) {
-      setError(err.message);
+      console.error(err);
+      const fallbackMessage = "The server is currently warming up. Please wait a few minutes and try again.";
+      const serverMessage = err?.message;
+      setError(serverMessage || fallbackMessage);
       throw err;
     } finally {
       setIsLoading(false);
@@ -108,7 +111,10 @@ export function AuthProvider({ children }) {
       setUser(incomingUser);
       navigate("/home");
     } catch (err) {
-      setError(err.message);
+      console.error(err);
+      const fallbackMessage = "The server is currently warming up. Please wait a few minutes and try again.";
+      const serverMessage = err?.message;
+      setError(serverMessage || fallbackMessage);
       throw err;
     } finally {
       setIsLoading(false);
