@@ -6,6 +6,7 @@ import { useAuth } from "../context/AuthContext.jsx";
 export default function LoginPage() {
   const { login, isLoading, error } = useAuth();
   const [form, setForm] = useState({ email: "", password: "" });
+  const [statusMessage, setStatusMessage] = useState("");
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -14,10 +15,14 @@ export default function LoginPage() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    setStatusMessage("⏳ Please wait, the server is warming up...");
     try {
       await login(form);
+      setStatusMessage("");
     } catch (err) {
-      // Error state is handled inside AuthContext, so we silently catch here.
+      setStatusMessage(
+        "⚙️ The server might still be warming up. Please try again in a moment."
+      );
     }
   };
 
@@ -30,7 +35,10 @@ export default function LoginPage() {
         className="w-full max-w-md rounded-3xl border border-night-200/40 bg-white/80 p-10 text-center text-night-900 shadow-lg backdrop-blur-xl transition-colors dark:border-white/10 dark:bg-white/10 dark:text-white"
       >
         <h1 className="text-3xl font-semibold">Welcome back to SleepWise</h1>
-        <p className="mt-2 text-sm text-slate-600 dark:text-slate-300">Sign in to continue improving your nightly rest.</p>
+        <p className="mt-2 text-sm text-slate-600 dark:text-slate-300">
+          Sign in to continue improving your nightly rest.
+        </p>
+
         <form onSubmit={handleSubmit} className="mt-8 space-y-5 text-left">
           <label className="flex flex-col gap-2 text-sm text-night-700 dark:text-slate-200">
             Email
@@ -44,6 +52,7 @@ export default function LoginPage() {
               onChange={handleChange}
             />
           </label>
+
           <label className="flex flex-col gap-2 text-sm text-night-700 dark:text-slate-200">
             Password
             <input
@@ -56,11 +65,14 @@ export default function LoginPage() {
               onChange={handleChange}
             />
           </label>
-          {error && (
-            <p className="rounded-2xl border border-red-400/40 bg-red-500/10 px-4 py-3 text-sm text-red-700 dark:text-red-200">
-              {error}
+
+          {/* ✅ Server warming-up or error messages */}
+          {(statusMessage || error) && (
+            <p className="rounded-2xl border border-amber-400/40 bg-amber-500/10 px-4 py-3 text-sm text-amber-700 dark:text-amber-300">
+              {statusMessage || error}
             </p>
           )}
+
           <button
             type="submit"
             disabled={isLoading}
@@ -69,9 +81,13 @@ export default function LoginPage() {
             {isLoading ? "Signing in..." : "Login"}
           </button>
         </form>
+
         <p className="mt-6 text-sm text-slate-600 dark:text-slate-300">
-          Need an account? {" "}
-          <Link to="/signup" className="text-aurora hover:text-night-900 dark:hover:text-white">
+          Need an account?{" "}
+          <Link
+            to="/signup"
+            className="text-aurora hover:text-night-900 dark:hover:text-white"
+          >
             Create one
           </Link>
         </p>
