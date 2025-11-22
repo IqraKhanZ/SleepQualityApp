@@ -34,18 +34,21 @@ export default function SleepForm({ onPrediction, scrollRef }) {
   };
 
   const formattedPayload = {
-  Age: values.age,
-  Gender: values.gender,
-  Bedtime: values.bedtime,
-  "Wake-up Time": values.wakeupTime,
-  "Daily Steps": values.dailySteps,
-  "Calories Burned": values.caloriesBurned,
-  "Physical Activity Level": values.activityLevel,
-  "Dietary Habits": values.dietaryHabits,
-  "Sleep Disorders": values.sleepDisorders,
-  "Medication Usage": values.medicationUsage,
-  userId: user?._id,
-};
+  () => ({
+    "Age": Number(values.age),
+    "Gender": values.gender,
+    "Bedtime": values.bedtime,
+    "Wake-up Time": values.wakeupTime,
+    "Daily Steps": Number(values.dailySteps),
+    "Calories Burned": Number(values.caloriesBurned),
+    "Physical Activity Level": values.activityLevel,
+    "Dietary Habits": values.dietaryHabits,
+    "Sleep Disorders": values.sleepDisorders ? "yes" : "no",
+    "Medication Usage": values.medicationUsage ? "yes" : "no",
+    userId: user?._id || user?.id || null
+  }),
+  [values, user]
+);
 
 
 
