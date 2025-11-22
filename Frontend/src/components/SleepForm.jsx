@@ -33,22 +33,19 @@ export default function SleepForm({ onPrediction, scrollRef }) {
     }));
   };
 
-  const formattedPayload = useMemo(
-  () => ({
-    "Age": Number(values.age),
-    "Gender": values.gender,
-    "Bedtime": values.bedtime,
-    "Wake-up Time": values.wakeupTime,
-    "Daily Steps": Number(values.dailySteps),
-    "Calories Burned": Number(values.caloriesBurned),
-    "Physical Activity Level": values.activityLevel,
-    "Dietary Habits": values.dietaryHabits,
-    "Sleep Disorders": values.sleepDisorders ? "yes" : "no",
-    "Medication Usage": values.medicationUsage ? "yes" : "no",
-    userId: user?._id || user?.id || null
-  }),
-  [values, user]
-);
+  const formattedPayload = {
+  age: Number(values.age),
+  gender: values.gender,
+  bedtime: values.bedtime,
+  wakeupTime: values.wakeupTime,
+  dailySteps: Number(values.dailySteps),
+  caloriesBurned: Number(values.caloriesBurned),
+  activityLevel: values.activityLevel,
+  dietaryHabits: values.dietaryHabits,
+  sleepDisorders: values.sleepDisorders,
+  medicationUsage: values.medicationUsage,
+  userId: user?._id,
+};
 
 
   const handleChange = (event) => {
