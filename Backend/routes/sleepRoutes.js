@@ -36,79 +36,55 @@ router.post("/submit", async (req, res) => {
   try {
     console.log("📥 REQ BODY RECEIVED:", req.body);
 
-    const {
-      age,
-      gender,
-      bedtime,
-      wakeupTime,
-      dailySteps,
-      caloriesBurned,
-      activityLevel,
-      dietaryHabits,
-      sleepDisorders,
-      medicationUsage,
-      userId
-    } = req.body;
+    const body = req.body;
 
-    // ✅ Basic validation check
+    // ✅ Map frontend fields to backend fields
+    const mappedData = {
+      userId: body.userId,
+      age: Number(body.Age),
+      gender: body.Gender,
+      bedtime: body.Bedtime,
+      wakeupTime: body["Wake-up Time"],
+      dailySteps: Number(body["Daily Steps"]),
+      caloriesBurned: Number(body["Calories Burned"]),
+      activityLevel: body["Physical Activity Level"],
+      dietaryHabits: body["Dietary Habits"],
+      sleepDisorders: Boolean(body["Sleep Disorders"]),
+      medicationUsage: Boolean(body["Medication Usage"])
+    };
+
+    // ✅ Validate required fields
     if (
-      !gender ||
-      !bedtime ||
-      !wakeupTime ||
-      dailySteps === undefined ||
-      caloriesBurned === undefined ||
-      !activityLevel ||
-      !dietaryHabits
+      !mappedData.gender ||
+      !mappedData.bedtime ||
+      !mappedData.wakeupTime ||
+      mappedData.dailySteps === undefined ||
+      mappedData.caloriesBurned === undefined ||
+      !mappedData.activityLevel ||
+      !mappedData.dietaryHabits
     ) {
       return res.status(400).json({
-        error: "Missing required fields",
-        received: req.body
+        error: "Missing required fields after mapping",
+        received: mappedData
       });
     }
 
-    // ✅ Safe boolean handling (works for boolean OR "Yes"/"No")
-    const sleepDisordersBool =
-      typeof sleepDisorders === "string"
-        ? sleepDisorders.toLowerCase() === "yes"
-        : Boolean(sleepDisorders);
+    // ✅ Save to MongoDB
+    const savedData = await SleepData.create(mappedData);
 
-    const medicationUsageBool =
-      typeof medicationUsage === "string"
-        ? medicationUsage.toLowerCase() === "yes"
-        : Boolean(medicationUsage);
-
-    /* -------------------- Save to MongoDB -------------------- */
-
-    const savedData = await SleepData.create({
-      userId,
-      age,
-      gender,
-      bedtime,
-      wakeupTime,
-      dailySteps,
-      caloriesBurned,
-      activityLevel,
-      dietaryHabits,
-      sleepDisorders: sleepDisordersBool,
-      medicationUsage: medicationUsageBool
-    });
-
-    /* -------------------- Prepare ML Input -------------------- */
-
+    // ✅ Prepare ML input (already correct format from frontend)
     const mlInput = {
-      Age: age,
-      Gender: gender.toLowerCase() === "male" ? 0 : 1,
-      Bedtime: convertToMinutes(bedtime),
-      "Wake-up Time": convertToMinutes(wakeupTime),
-      "Daily Steps": dailySteps,
-      "Calories Burned": caloriesBurned,
-      "Physical Activity Level": mapActivity(activityLevel),
-      "Dietary Habits": mapDiet(dietaryHabits),
-      "Sleep Disorders": sleepDisordersBool ? 1 : 0,
-      "Medication Usage": medicationUsageBool ? 1 : 0
+      Age: mappedData.age,
+      Gender: mappedData.gender.toLowerCase() === "male" ? 0 : 1,
+      Bedtime: convertToMinutes(mappedData.bedtime),
+      "Wake-up Time": convertToMinutes(mappedData.wakeupTime),
+      "Daily Steps": mappedData.dailySteps,
+      "Calories Burned": mappedData.caloriesBurned,
+      "Physical Activity Level": mapActivity(mappedData.activityLevel),
+      "Dietary Habits": mapDiet(mappedData.dietaryHabits),
+      "Sleep Disorders": mappedData.sleepDisorders ? 1 : 0,
+      "Medication Usage": mappedData.medicationUsage ? 1 : 0
     };
-
-    /* -------------------- Call Flask ML API -------------------- */
 
     const response = await axios.post(
       "https://sleepqualityapp-backend-ml-flask.onrender.com/predict",
@@ -118,12 +94,8 @@ router.post("/submit", async (req, res) => {
     const predictedQuality =
       response?.data?.["Predicted Sleep Quality"];
 
-    /* -------------------- Update DB with Prediction -------------------- */
-
     savedData.prediction = predictedQuality;
     await savedData.save();
-
-    /* -------------------- Send Response -------------------- */
 
     res.status(200).json({
       message: "✅ Sleep data saved and predicted successfully!",
@@ -133,12 +105,10 @@ router.post("/submit", async (req, res) => {
 
   } catch (error) {
     console.error("❌ Error saving or predicting sleep data:", error);
-
     res.status(500).json({
-      error: "Server error: could not process sleep data",
+      error: "Server error",
       details: error.message
     });
   }
 });
-
 export default router;
