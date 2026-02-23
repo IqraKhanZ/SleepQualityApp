@@ -33,19 +33,7 @@ export default function SleepForm({ onPrediction, scrollRef }) {
     }));
   };
 
-  const formattedPayload = {
-  age: Number(values.age),
-  gender: values.gender,
-  bedtime: values.bedtime,
-  wakeupTime: values.wakeupTime,
-  dailySteps: Number(values.dailySteps),
-  caloriesBurned: Number(values.caloriesBurned),
-  activityLevel: values.activityLevel,
-  dietaryHabits: values.dietaryHabits,
-  sleepDisorders: values.sleepDisorders,
-  medicationUsage: values.medicationUsage,
-  userId: user?._id || user?.id || null
-};
+  
 
 
 
@@ -58,44 +46,76 @@ export default function SleepForm({ onPrediction, scrollRef }) {
   };
 
   const handleSubmit = async (event) => {
-    event.preventDefault();
-    setLoading(true);
-    setError(null);
-    setPrediction(null);
-    try {
-      console.log("\uD83E\uDDE0 Sending payload:", formattedPayload);
-      const response = await axios.post("https://sleepqualityapp-backend.onrender.com/api/sleep/submit", formattedPayload, {
+  event.preventDefault();
+  setLoading(true);
+  setError(null);
+  setPrediction(null);
+
+  try {
+    // ✅ CREATE PAYLOAD HERE (inside submit)
+    const formattedPayload = {
+      age: Number(values.age),
+      gender: values.gender,
+      bedtime: values.bedtime,
+      wakeupTime: values.wakeupTime,
+      dailySteps: Number(values.dailySteps),
+      caloriesBurned: Number(values.caloriesBurned),
+      activityLevel: values.activityLevel,
+      dietaryHabits: values.dietaryHabits,
+      sleepDisorders: values.sleepDisorders,
+      medicationUsage: values.medicationUsage,
+      userId: user?._id || user?.id || null
+    };
+
+    console.log("🚀 Sending payload:", formattedPayload);
+
+    const response = await axios.post(
+      "https://sleepqualityapp-backend.onrender.com/api/sleep/submit",
+      formattedPayload,
+      {
         headers: {
           "Content-Type": "application/json",
           ...(token ? { Authorization: `Bearer ${token}` } : {})
         }
-      });
-      const score = response?.data?.predictedSleepQuality ?? response?.data?.prediction ?? null;
-      const numericScore = typeof score === "number" ? score : Number(score);
-      if (!Number.isNaN(numericScore)) {
-        setPrediction(numericScore);
-        if (typeof onPrediction === "function") {
-          const submissionSummary = {
-            ...values,
-            age: Number(values.age),
-            dailySteps: Number(values.dailySteps),
-            caloriesBurned: Number(values.caloriesBurned),
-            sleepDisorders: values.sleepDisorders ? "Yes" : "No",
-            medicationUsage: values.medicationUsage ? "Yes" : "No",
-            sleepQuality: numericScore
-          };
-          onPrediction(numericScore, submissionSummary);
-        }
       }
-    } catch (err) {
-      console.error(err);
-      const fallbackMessage = "The server is currently warming up. Please wait a few minutes and try again.";
-      const serverMessage = err?.response?.data?.error || err?.message;
-      setError(serverMessage || fallbackMessage);
-    } finally {
-      setLoading(false);
+    );
+
+    const score =
+      response?.data?.predictedSleepQuality ??
+      response?.data?.prediction ??
+      null;
+
+    const numericScore =
+      typeof score === "number" ? score : Number(score);
+
+    if (!Number.isNaN(numericScore)) {
+      setPrediction(numericScore);
+
+      if (typeof onPrediction === "function") {
+        const submissionSummary = {
+          ...values,
+          age: Number(values.age),
+          dailySteps: Number(values.dailySteps),
+          caloriesBurned: Number(values.caloriesBurned),
+          sleepDisorders: values.sleepDisorders ? "Yes" : "No",
+          medicationUsage: values.medicationUsage ? "Yes" : "No",
+          sleepQuality: numericScore
+        };
+
+        onPrediction(numericScore, submissionSummary);
+      }
     }
-  };
+  } catch (err) {
+    console.error(err);
+    const fallbackMessage =
+      "The server is currently warming up. Please wait a few minutes and try again.";
+    const serverMessage =
+      err?.response?.data?.error || err?.message;
+    setError(serverMessage || fallbackMessage);
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
   <section ref={scrollRef} className="relative mx-auto mt-12 max-w-5xl px-4" id="questionnaire">
