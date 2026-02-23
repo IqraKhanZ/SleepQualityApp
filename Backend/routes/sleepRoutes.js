@@ -1,96 +1,142 @@
 import express from "express";
 import axios from "axios";
-import SleepData from "../models/sleep_data.js"; // your Mongoose schema
+import SleepData from "../models/sleep_data.js";
 
 const router = express.Router();
 
-// 🧠 Helper functions
+/* -------------------- Helper Functions -------------------- */
+
 function convertToMinutes(timeStr) {
-  // Convert "HH:MM" string to total minutes
   if (!timeStr) return 0;
   const [h, m] = timeStr.split(":").map(Number);
   return h * 60 + m;
 }
 
 function mapActivity(level) {
+  if (!level) return 0;
   const l = level.toLowerCase();
   if (l === "low") return -1;
   if (l === "medium") return 0;
   if (l === "high") return 1;
-  throw new Error(`Invalid activityLevel value: ${level}`);
+  return 0;
 }
 
 function mapDiet(diet) {
+  if (!diet) return 0;
   const d = diet.toLowerCase();
   if (d === "unhealthy") return -1;
   if (d === "medium") return 0;
   if (d === "healthy") return 1;
-  throw new Error(`Invalid dietaryHabits value: ${diet}`);
+  return 0;
 }
 
-// 💤 Route: Submit sleep data + predict quality
+/* -------------------- Route -------------------- */
+
 router.post("/submit", async (req, res) => {
   try {
-    const sleepData = req.body;
+    console.log("📥 REQ BODY RECEIVED:", req.body);
 
-    // ✅ Convert "Yes"/"No" to boolean
+    const {
+      age,
+      gender,
+      bedtime,
+      wakeupTime,
+      dailySteps,
+      caloriesBurned,
+      activityLevel,
+      dietaryHabits,
+      sleepDisorders,
+      medicationUsage,
+      userId
+    } = req.body;
+
+    // ✅ Basic validation check
+    if (
+      !gender ||
+      !bedtime ||
+      !wakeupTime ||
+      dailySteps === undefined ||
+      caloriesBurned === undefined ||
+      !activityLevel ||
+      !dietaryHabits
+    ) {
+      return res.status(400).json({
+        error: "Missing required fields",
+        received: req.body
+      });
+    }
+
+    // ✅ Safe boolean handling (works for boolean OR "Yes"/"No")
     const sleepDisordersBool =
-      sleepData.sleepDisorders?.toLowerCase() === "yes";
-    const medicationUsageBool =
-      sleepData.medicationUsage?.toLowerCase() === "yes";
+      typeof sleepDisorders === "string"
+        ? sleepDisorders.toLowerCase() === "yes"
+        : Boolean(sleepDisorders);
 
-    // ✅ Save user-friendly data in MongoDB
+    const medicationUsageBool =
+      typeof medicationUsage === "string"
+        ? medicationUsage.toLowerCase() === "yes"
+        : Boolean(medicationUsage);
+
+    /* -------------------- Save to MongoDB -------------------- */
+
     const savedData = await SleepData.create({
-      userId: sleepData.userId,
-      gender: sleepData.gender,
-      bedtime: sleepData.bedtime,
-      wakeupTime: sleepData.wakeupTime,
-      dailySteps: sleepData.dailySteps,
-      caloriesBurned: sleepData.caloriesBurned,
-      activityLevel: sleepData.activityLevel,
-      dietaryHabits: sleepData.dietaryHabits,
+      userId,
+      age,
+      gender,
+      bedtime,
+      wakeupTime,
+      dailySteps,
+      caloriesBurned,
+      activityLevel,
+      dietaryHabits,
       sleepDisorders: sleepDisordersBool,
-      medicationUsage: medicationUsageBool,
+      medicationUsage: medicationUsageBool
     });
 
-    // ✅ Prepare ML input
+    /* -------------------- Prepare ML Input -------------------- */
+
     const mlInput = {
-      Age: sleepData.age,
-      Gender: sleepData.gender.toLowerCase() === "male" ? 0 : 1,
-      Bedtime: convertToMinutes(sleepData.bedtime),
-      "Wake-up Time": convertToMinutes(sleepData.wakeupTime),
-      "Daily Steps": sleepData.dailySteps,
-      "Calories Burned": sleepData.caloriesBurned,
-      "Physical Activity Level": mapActivity(sleepData.activityLevel),
-      "Dietary Habits": mapDiet(sleepData.dietaryHabits),
+      Age: age,
+      Gender: gender.toLowerCase() === "male" ? 0 : 1,
+      Bedtime: convertToMinutes(bedtime),
+      "Wake-up Time": convertToMinutes(wakeupTime),
+      "Daily Steps": dailySteps,
+      "Calories Burned": caloriesBurned,
+      "Physical Activity Level": mapActivity(activityLevel),
+      "Dietary Habits": mapDiet(dietaryHabits),
       "Sleep Disorders": sleepDisordersBool ? 1 : 0,
-      "Medication Usage": medicationUsageBool ? 1 : 0,
+      "Medication Usage": medicationUsageBool ? 1 : 0
     };
 
-    // ✅ Send to Flask API
+    /* -------------------- Call Flask ML API -------------------- */
+
     const response = await axios.post(
       "https://sleepqualityapp-backend-ml-flask.onrender.com/predict",
       mlInput
     );
 
-    // ✅ Get model prediction
-    const predictedQuality = response.data["Predicted Sleep Quality"];
+    const predictedQuality =
+      response?.data?.["Predicted Sleep Quality"];
 
-    // ✅ Update MongoDB with prediction
+    /* -------------------- Update DB with Prediction -------------------- */
+
     savedData.prediction = predictedQuality;
     await savedData.save();
 
-    // ✅ Respond to frontend
+    /* -------------------- Send Response -------------------- */
+
     res.status(200).json({
       message: "✅ Sleep data saved and predicted successfully!",
       predictedSleepQuality: predictedQuality,
-      savedEntry: savedData,
+      savedEntry: savedData
     });
+
   } catch (error) {
     console.error("❌ Error saving or predicting sleep data:", error);
+
     res.status(500).json({
       error: "Server error: could not process sleep data",
-      details: error.message,
+      details: error.message
     });
   }
 });
